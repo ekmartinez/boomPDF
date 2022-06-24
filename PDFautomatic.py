@@ -1,4 +1,3 @@
-import os
 from PyPDF2 import PdfMerger
 from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfFileWriter
