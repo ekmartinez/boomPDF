@@ -8,8 +8,8 @@ class BoomPdf:
         self.pdfWriter = PdfFileWriter()
     
     def pdf_merger(self, pdf_files):
-        """Takes multiple pdfs as list of files,
-        produces on consolidated PDF file"""
+        """Takes a list of PDF files,
+            produces one consolidated PDF file."""
         for file in pdf_files:
             self.pdfMerger.append(file)
 
@@ -17,8 +17,9 @@ class BoomPdf:
         self.pdfMerger.close()
     
     def pdf_splitter(self, pdf_file):
-        """Takes a PDF file and produces each page
-            as a single PDF file"""
+        """Takes a multiple page PDF file,
+            splits the file and produces each page
+            as individual PDF files."""
         pdf = PdfFileReader(pdf_file)
         for pag in range(pdf.getNumPages()):
             curr_pag = pdf.getPage(pag)
