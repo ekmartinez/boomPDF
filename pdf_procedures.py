@@ -299,8 +299,12 @@ class PDFOperations:
 
 if __name__ == "__main__":
     pdf_operations = PDFOperations()
-    pdf_operations.select_pdf_files(['extracted.pdf', 'file1.pdf', 'file2.pdf', 'merged_output.pdf'])
-    
+    pdf_operations.select_pdf_files(['Outline.pdf', 'Outline-1.pdf', 'Outline-2.pdf', 'Outline-3.pdf'])
+
+    # ----------------------------------------------------------------------
+    # EXTRACT 
+    # ----------------------------------------------------------------------
+
     # Extract a single page
     #extracted_writer_single = pdf_operations.extract_pdf_pages('Maths.pdf', 2, "extracted.pdf")
     
@@ -310,8 +314,15 @@ if __name__ == "__main__":
     # Extract non-contigeous
     #extracted_writer_single = pdf_operations.extract_pdf_pages('Maths.pdf', [1, 3, 5], "extracted.pdf")
 
+    # ----------------------------------------------------------------------
+    # MERGE
+    # ----------------------------------------------------------------------
     # Merge the selected PDF files into a single file
-    #pdf_operations.merge_pdf_files('merged_output.pdf')
+    # pdf_operations.merge_pdf_files('ISC_Notes.pdf')
+
+    # ----------------------------------------------------------------------
+    # DELETE
+    # ----------------------------------------------------------------------
 
     # Delete a single page from the original file (1-based)
     # pdf_operations.delete_pdf_pages('merged_output.pdf', [1, 3, 5])
@@ -324,10 +335,18 @@ if __name__ == "__main__":
 
     # Delete non-contiguous pages from the original file (1-based)
     # pdf_operations.delete_pdf_pages('file1.pdf', [1, 3, 5])
+    
+    # ----------------------------------------------------------------------
+    # INSERT
+    # ----------------------------------------------------------------------
 
     # Insert a page from file2.pdf into merged_output.pdf
     # pdf_operations.insert_into_pdf('merged_output.pdf', 'file2.pdf', 1, 2)  # Insert page 1 from file2.pdf at position 2 in merged_output.pdf
     
+    # ----------------------------------------------------------------------
+    # ROTATE
+    # ----------------------------------------------------------------------
+
     # Rotate page 1 in merged_output.pdf by 90 degrees
     # pdf_operations.rotate_pdf_pages('merged_output.pdf', 1, 90)
 
