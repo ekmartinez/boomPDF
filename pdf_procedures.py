@@ -1,4 +1,5 @@
 import os
+from pdf2docx import Converter
 from pypdf import PdfReader, PdfWriter
 
 class PDFOperations:
@@ -296,10 +297,66 @@ class PDFOperations:
                 print(f"An error occurred while rotating pages: {e}")
                 return None
 
+    def convert_pdf_to_word(self, pdf_path, docx_path, page_specifications=None):
+        """
+        Convert a PDF file to a Word document.
+
+        :param pdf_path: Path to the PDF file to convert.
+        :param docx_path: Path to save the converted Word document.
+        :param page_specifications: A single page number, a range (e.g., "1-5"), or a list of pages (1-based indexing).
+        """
+        if pdf_path not in self.pdf_paths:
+            print(f"PDF file {pdf_path} is not selected.")
+            return None
+
+        try:
+            cv = Converter(pdf_path)
+
+            if page_specifications is None:
+                # Convert the entire document
+                cv.convert(docx_path)  # All pages by default
+                print(f"Converted entire PDF to {docx_path}.")
+            else:
+                pages_to_convert = []
+
+                if isinstance(page_specifications, int):
+                    if 1 <= page_specifications <= len(cv.pages):
+                        pages_to_convert.append(page_specifications - 1)  # Convert to 0-indexed
+                    else:
+                        print(f"Page number {page_specifications} is out of range for {pdf_path}.")
+                elif isinstance(page_specifications, str):
+                    if '-' in page_specifications:
+                        start, end = map(int, page_specifications.split('-'))
+                        for page in range(start - 1, end):  # Convert to 0-indexed
+                            if 0 <= page < len(cv.pages):
+                                pages_to_convert.append(page)
+                            else:
+                                print(f"Page number {page + 1} is out of range for {pdf_path}.")
+                    else:
+                        page_number = int(page_specifications)
+                        if 1 <= page_number <= len(cv.pages):
+                            pages_to_convert.append(page_number - 1)  # Convert to 0-indexed
+
+                elif isinstance(page_specifications, list):
+                    for page_number in page_specifications:
+                        if 1 <= page_number <= len(cv.pages):
+                            pages_to_convert.append(page_number - 1)  # Convert to 0-indexed
+                        else:
+                            print(f"Page number {page_number} is out of range for {pdf_path}.")
+
+                # Convert specified pages
+                if pages_to_convert:
+                    cv.convert(docx_path, pages=pages_to_convert)
+                    print(f"Converted specified pages {page_specifications} from {pdf_path} to {docx_path}.")
+
+            cv.close()
+        except Exception as e:
+            print(f"An error occurred while converting PDF to Word: {e}")
+            return None
 
 if __name__ == "__main__":
     pdf_operations = PDFOperations()
-    pdf_operations.select_pdf_files(['Outline.pdf', 'Outline-1.pdf', 'Outline-2.pdf', 'Outline-3.pdf'])
+    pdf_operations.select_pdf_files(['ISC_Notes.pdf'])
 
     # ----------------------------------------------------------------------
     # EXTRACT 
@@ -355,3 +412,17 @@ if __name__ == "__main__":
 
     # Rotate non-contiguous pages in merged_output.pdf
     # pdf_operations.rotate_pdf_pages('merged_output.pdf', [1, 3], 270)
+    
+    # ----------------------------------------------------------------------
+    # Convert PDF document to Word
+    # ----------------------------------------------------------------------
+    # Convert the entire PDF to Word
+    pdf_operations.convert_pdf_to_word('ISC_Notes.pdf', 'file1.docx')
+
+    # Convert specific pages (1-based indexing)
+    # pdf_operations.convert_pdf_to_word('file1.pdf', 'file1_partial.docx', page_specifications="1-3")
+
+    # Convert non-contiguous pages
+    # pdf_operations.convert_pdf_to_word('file1.pdf', 'file1_selected.docx', page_specifications=[1, 3, 5])
+    
+
