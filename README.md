@@ -1,5 +1,5 @@
 # 
 
-Class for pdf manipulations using PyPDF2.
+Class for pdf manipulations using pypdf.
 
 
