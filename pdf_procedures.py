@@ -6,24 +6,34 @@ class PDFOperations:
     def __init__(self):
         self.pdf_paths = []
 
-    def select_pdf_files(self, paths):
+    def select_pdf_files(self, paths=None):
         """
-        Select PDF files by specifying their paths.
+        Select PDF files by specifying their paths or by selecting all PDF files in the 'data/' directory.
 
-        :param paths: A single path or a list of paths to PDF files.
+        :param paths: A single path or a list of paths to PDF files.  If None, select all PDF files in 'data/'.
         """
-
-        if isinstance(paths, str):
-            paths = [paths] # Convert to list if a single path is provided
-        for path in paths:
-            if os.path.isfile(path) and path.lower().endswith('.pdf'):
-                self.pdf_paths.append(path)
+        if paths is None:
+            # Select all PDF files in the 'data/' directory
+            directory = 'data/'
+            if os.path.isdir(directory):
+                for filename in os.listdir(directory):
+                    if filename.lower().endswith('.pdf'):
+                        full_path = os.path.join(directory, filename)
+                        self.pdf_paths.append(full_path)
             else:
-                print(f"Invalid PDF file: {path}")
-
+                print(f"Directory {directory} does not exist.")
+        else:
+            if isinstance(paths, str):
+                paths = [paths] # Convert to list if a single path is provided
+            for path in paths:
+                if os.path.isfile(path) and path.lower().endswith('.pdf'):
+                    self.pdf_paths.append(path)
+                else:
+                    print(f"Invalid PDF file: {path}")
+        
     def get_selected_files(self):
         """
-        Get the list of slected PDF file paths.
+        Get the list of selected PDF file paths.
 
         :return: List of selected PDF file paths.
         """
@@ -285,7 +295,7 @@ class PDFOperations:
                     # Add pages to the writer, rotating specified pages
                     for page in range(total_pages):
                         if page in pages_to_rotate:
-                            reader.pages[page].rotate_clockwise(angle)  # Rotate the page
+                            reader.pages[page].rotate(angle)  # Rotate the page
                         modified_writer.add_page(reader.pages[page])
 
                 # Overwrite the original PDF file with the modified content
@@ -372,6 +382,10 @@ if __name__ == "__main__":
     #extracted_writer_single = pdf_operations.extract_pdf_pages('Maths.pdf', [1, 3, 5], "extracted.pdf")
 
     # ----------------------------------------------------------------------
+    # SPLIT 
+    # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
     # MERGE
     # ----------------------------------------------------------------------
     # Merge the selected PDF files into a single file
@@ -417,7 +431,7 @@ if __name__ == "__main__":
     # Convert PDF document to Word
     # ----------------------------------------------------------------------
     # Convert the entire PDF to Word
-    pdf_operations.convert_pdf_to_word('ISC_Notes.pdf', 'file1.docx')
+    # pdf_operations.convert_pdf_to_word('ISC_Notes.pdf', 'file1.docx')
 
     # Convert specific pages (1-based indexing)
     # pdf_operations.convert_pdf_to_word('file1.pdf', 'file1_partial.docx', page_specifications="1-3")
